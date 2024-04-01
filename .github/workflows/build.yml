@@ -1,0 +1,34 @@
+name: Xbox
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+jobs:
+  Xbox:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install and Setup Dependencies
+      run: |
+        sudo apt-get update -y && sudo apt-get install -y flex bison clang lld llvm
+ 
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Compile
+      run: |
+        git clone https://github.com/XboxDev/nxdk.git --recursive
+        eval $(nxdk/bin/activate -s)
+        make -j
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: xblc_dumper
+        path: |
+          bin
