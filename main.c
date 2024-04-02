@@ -20,8 +20,9 @@ void device_connection_callback(UDEV_T *udev, int status)
     uint32_t transferred_bytes = 0;
     int ret;
 
-    if (udev->descriptor.idVendor != 0x045E || udev->descriptor.idProduct != 0x0283)
-    {
+    uint16_t vid = udev->descriptor.idVendor;
+    uint16_t pid = udev->descriptor.idProduct;
+    if (!((vid == 0x45E && pid == 0x0283) || (vid == 0x074D && pid == 0x3556))) {
         debugPrint("%04x %04x is not a Xbox Live Communicator.\n", udev->descriptor.idVendor, udev->descriptor.idProduct);
         return;
     }
